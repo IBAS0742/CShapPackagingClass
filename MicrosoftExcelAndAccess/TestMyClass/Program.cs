@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MicrosoftExcelAndAccess;
 using System.Data;
-using Newtonsoft.Json;
 
 namespace TestMyClass
 {
@@ -13,107 +12,71 @@ namespace TestMyClass
     {
         static void Main(string[] args)
         {
-            #region Test MDBDB mdb
-            //DBBase mdbdb = new MDBDB();
-            //mdbdb.FileName = @"D:\C#\mdf\Data.mdb";
-            //if (!mdbdb.TryToConnect())
-            //{
-            //    Console.WriteLine(mdbdb.Err_sb.ToString());
-            //}
-            ////DearDataTable(mdbdb.GetAllTable());
-            //DataSet ds = mdbdb.Query_with_result("select * from test");
-            //DearDataSet(ds);
-            //mdbdb.GetTableHeader(ds.Tables[0]).ForEach(
-            //        n =>
-            //        {
-            //            Console.Write(n + "\t");
-            //        }
-            //    );
-            //Console.WriteLine();
+            #region 2016-11-07 14:35:50 ACCESS
+            DBBase db = DBInstance.GetDBInstance(DBType.Access);
+            db.FileName = @"test.mdb";
+            if (db.TryToConnect())
+            {
+                Console.WriteLine("-----------ACCESS-----------");
+                DearDataSet(db.Query_with_result("select * from test"));
+            } else
+            {
+                Console.WriteLine(db.Err_sb.ToString());
+            }
+            db.DisConnect();
             #endregion
 
-            #region Test MDBDB excel
-            //MDBDB mdb = new MDBDB();
-            //mdb.FileName = @"D:\C#\mdf\Data.xls";
-            //mdb.IsExcel = true;
-            //if (!mdb.TryToConnect())
-            //{
-            //    Console.Write(mdb.Err_sb.ToString());
-            //}
-            //Console.Write("\n");
-            //DearDataTable(mdb.GetAllTable());
-            //Console.WriteLine("");
-            //DataSet ds = mdb.Query_with_result("select * from [Sheet1$]");
-            //DearDataTable(ds.Tables[0]);
-            //mdb
-            //    .GetTableHeader(
-            //        ds.Tables[0]
-            //            ).ForEach(n => {
-            //                Console.Write(n + "\t");
-            //            });
+            #region 2016-11-07 16:26:08 Excel
+            DBBase db_ = DBInstance.GetDBInstance(DBType.Excel);
+            db_.FileName = "test.xls";
+            if (db_.TryToConnect())
+            {
+                Console.WriteLine("-----------Excel-----------");
+                DearDataSet(db_.Query_with_result("select * from [Sheet1$]"));
+            } else
+            {
+                Console.WriteLine(db_.Err_sb.ToString());
+            }
+            db_.DisConnect();
             #endregion
 
-            #region MDF file
-            //MDFDB mdf = new MDFDB();
-            //mdf.FileName = @"D:\C#\测试\net_disk\新建文件夹\NET_DISK_FILE_SYSTEM_r.mdf";
-            //if (mdf.TryToConnect())
+            #region 2016-11-07 16:27:50 MDF (something easy to error)
+            ///**
+            // * Err : 尝试为文件 test.mdf 附加自动命名的数据库，但失败。
+            // *       已存在同名的数据库，或指定的文件无法打开或位于 UNC 共享目录中。
+            // */
+            //DBBase db__ = DBInstance.GetDBInstance(DBType.MDF);
+            //db__.FileName = @"test.mdf";
+            //if (db__.TryToConnect())
             //{
-            //    DearDataSet(mdf.Query_with_result("SELECT * FROM dbo.ND_USER"));
+            //    Console.WriteLine("-----------MDF-----------");
+            //    DearDataSet(db__.Query_with_result("select * from Table"));
             //}
             //else
             //{
-            //    Console.WriteLine(mdf.Err_sb.ToString());
+            //    Console.WriteLine("Err : " + db__.Err_Ex.Message);
             //}
-            ////Console.WriteLine(mdf
-            ////    .Query_non_result("insert into nd_user(Nick,PWD,ROLES) values('Test1','zzZZ1100','1')"));
-            //mdf.DisConnect();
+            //db__.DisConnect();
             #endregion
 
-            #region SQL SERVER 
-            //SqlDB sql = new SqlDB();
-            //sql.Sql_Setting.Server_Machine = @"DESKTOP-ESTNB01\SQLEXPRESS";
-            //sql.Sql_Setting.Database = "net_disk";
-            //sql.Sql_Setting.isWindowsAuth = true;
-            ////sql.UserName = @"DESKTOP-ESTNB01\Administrator";
-            ////sql.Password = "zzZZ1100";
-            //if (sql.TryToConnect())
-            //{
-            //    DearDataSet(sql.Query_with_result("select * from nd_user"));
-            //} else
-            //{
-            //    Console.WriteLine(sql.Err_Ex.Message);
-            //}
-            //sql.DisConnect();
-            #endregion
-
-            #region DBInstance
-            //DBBase db = DBInstance.GetDBInstance(DBType.SqlServer);
-            //db.Sql_Seting(new SqlDb_Setting() {
-            //    Server_Machine = @"DESKTOP-ESTNB01\SQLEXPRESS",
-            //    Database = "net_disk",
-            //    isWindowsAuth = true
-            //});
-            //db.TryToConnect();
-            //DearDataSet(db.Query_with_result("select * from nd_user"));
-            #endregion
-
-            //#region Test MDF
-            DBBase db___ = DBInstance.GetDBInstance(DBType.MDF);
-            db___.FileName = @"D:\NET_DISK_FILE_SYSTEM_r.mdf";
-            db___.TryToConnect();
-            Console.WriteLine(db___.Err_sb.ToString());
-            DearDataSet(db___.Query_with_result("select * from nd_user"));
+            #region 2016-11-07 16:37:29 
+            DBBase db___ = DBInstance.GetDBInstance(DBType.SqlServer);
+            SqlDb_Setting sqlSetting = new SqlDb_Setting();
+            sqlSetting.Server_Machine = @"DESKTOP-ESTNB01\SQLEXPRESS";
+            sqlSetting.UserName = "";
+            sqlSetting.isWindowsAuth = true;
+            sqlSetting.Database = "Book";
+            db___.Sql_Seting(sqlSetting);
+            if (db___.TryToConnect())
+            {
+                Console.WriteLine("-----------SQL SERVER-----------");
+                DearDataSet(db___.Query_with_result("select * from Reader"));
+            }
+            else
+            {
+                Console.WriteLine("Err : " + db___.Err_Ex.Message);
+            }
             db___.DisConnect();
-            //#endregion
-
-            #region 
-            string json = "{\"dbtype\":2,\"FileName\":\"D:\\\\NET_DISK_FILE_SYSTEM_r.mdf\"}";
-            Database_ db = JsonConvert.DeserializeObject<Database_>(json);
-            DBBase db_ = DBInstance.GetDBInstance(db.dbtype);
-            db_.FileName = db.FileName;
-            db_.TryToConnect();
-            DearDataSet(db_.Query_with_result("select * from nd_user"));
-            db_.DisConnect();
             #endregion
         }
         public static void DearDataSet(DataSet ds) {
