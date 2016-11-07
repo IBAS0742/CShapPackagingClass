@@ -1,7 +1,10 @@
 Usage :
-1 import the Library "MicrosoftExcelAndAccess.dll"
-2 using it
-3 start to use
+
+1 import the Library "MicrosoftExcelAndAccess.dll" 
+
+2 using it 
+
+3 start to use 
 
 DBBase is a abstract class , and it have three child class {MDBDB,MDFDB,SqlDB}.
 So , the first is to get one DBBase instance by DBInstance.GetDBInstance(DBType).
@@ -14,7 +17,6 @@ SqlDb_Setting have five prototies (a)Server_Machine and (b)Database and (c)UserN
 [c and d is match and e is odd , you can choose c and d or choose e but none is not agree . a and b is required .]
 
 //###2016-11-07 14:35:50 ACCESS###
-#region 
 DBBase db = DBInstance.GetDBInstance(DBType.Access);
 db.FileName = @"test.mdb";
 if (db.TryToConnect())
@@ -26,10 +28,8 @@ if (db.TryToConnect())
 	Console.WriteLine(db.Err_sb.ToString());
 }
 db.DisConnect();
-#endregion
 
 //###2016-11-07 16:26:08 Excel###
-#region 
 DBBase db_ = DBInstance.GetDBInstance(DBType.Excel);
 db_.FileName = "test.xls";
 if (db_.TryToConnect())
@@ -41,13 +41,11 @@ if (db_.TryToConnect())
 	Console.WriteLine(db_.Err_sb.ToString());
 }
 db_.DisConnect();
-#endregion
 
 //###2016-11-07 16:27:50 MDF###
-#region  (something easy to error)
 ///**
-// * Err : ³¢ÊÔÎªÎÄ¼ş test.mdf ¸½¼Ó×Ô¶¯ÃüÃûµÄÊı¾İ¿â£¬µ«Ê§°Ü¡£
-// *       ÒÑ´æÔÚÍ¬ÃûµÄÊı¾İ¿â£¬»òÖ¸¶¨µÄÎÄ¼şÎŞ·¨´ò¿ª»òÎ»ÓÚ UNC ¹²ÏíÄ¿Â¼ÖĞ¡£
+// * Err : å°è¯•ä¸ºæ–‡ä»¶ test.mdf é™„åŠ è‡ªåŠ¨å‘½åçš„æ•°æ®åº“ï¼Œä½†å¤±è´¥ã€‚
+// *       å·²å­˜åœ¨åŒåçš„æ•°æ®åº“ï¼Œæˆ–æŒ‡å®šçš„æ–‡ä»¶æ— æ³•æ‰“å¼€æˆ–ä½äº UNC å…±äº«ç›®å½•ä¸­ã€‚
 // */
 //DBBase db__ = DBInstance.GetDBInstance(DBType.MDF);
 //db__.FileName = @"test.mdf";
@@ -61,10 +59,8 @@ db_.DisConnect();
 //    Console.WriteLine("Err : " + db__.Err_Ex.Message);
 //}
 //db__.DisConnect();
-#endregion
 
 //###2016-11-07 16:37:29 SQL SERVER###
-#region 
 DBBase db___ = DBInstance.GetDBInstance(DBType.SqlServer);
 SqlDb_Setting sqlSetting = new SqlDb_Setting();
 sqlSetting.Server_Machine = @"DESKTOP-ESTNB01\SQLEXPRESS";
@@ -82,4 +78,3 @@ else
 	Console.WriteLine("Err : " + db___.Err_Ex.Message);
 }
 db___.DisConnect();
-#endregion
